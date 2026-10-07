@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="bg">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101c32">
+  <title>Орбита — игра за памет</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="game.js" defer></script>
+</head>
+<body>
+  <header class="header"><a href="./index.html" aria-label="Орбита — начало">Орбита</a><span>Игра за памет</span></header>
+  <main>
+    <h1>Малко фокус. Много открития.</h1>
+    <p class="intro">Обърни картите и открий всички еднакви двойки.</p>
+    <section class="game" aria-label="Игра за памет">
+      <div class="toolbar">
+        <label class="sr-only" for="difficulty">Трудност</label>
+        <select id="difficulty"><option value="easy">Лесно · 6 двойки</option><option value="medium" selected>Средно · 8 двойки</option><option value="hard">Трудно · 12 двойки</option></select>
+        <button id="restart" class="primary">Нова игра</button>
+      </div>
+      <div class="stats">
+        <div><span>Ходове</span><strong id="moves">00</strong></div>
+        <div><span>Време</span><strong id="time">00:00</strong></div>
+        <div><span>Двойки</span><strong id="pairs">0 / 8</strong></div>
+        <div class="record"><span>Личен рекорд</span><strong id="best">—</strong></div>
+      </div>
+      <progress id="progress" value="0" max="8" aria-label="Открити двойки"></progress>
+      <div id="board" class="board" aria-label="Карти"></div>
+      <p id="status" class="status" role="status">Две карти. Една двойка. Твоят следващ ход.</p>
+      <p class="hint">Таймерът започва с първата карта.</p>
+      <p id="storage-note" class="hint" hidden>Запазването е недостъпно. Можеш да играеш без рекорд.</p>
+    </section>
+    <details><summary>Как се играе?</summary><p>Избери две карти. Еднаквите остават открити, а различните се скриват. Един ход е отварянето на две карти. Открий всички двойки с възможно най-малко ходове. При равни ходове печели по-краткото време. Трудността започва нова игра. С клавиатура използвай Tab и Enter или интервал.</p></details>
+  </main>
+  <footer>Учебен проект, създаден с помощта на AI · HTML, CSS и JavaScript</footer>
+  <dialog id="win" aria-labelledby="win-title">
+    <div class="win-star" aria-hidden="true">✦</div><h2 id="win-title">Всички двойки са открити!</h2>
+    <p id="win-result"></p><p id="win-record"></p>
+    <button id="play-again" class="primary">Играй отново</button><button id="close-win" class="secondary">Виж картите</button>
+  </dialog>
+</body>
+</html>
