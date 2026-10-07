@@ -1,9 +1,129 @@
 "use strict";
 
 // Всяко ниво използва различен брой двойки от един и същ набор.
-const levels = { easy: 6, medium: 8, hard: 12 };
-const names = ["Сатурн", "Луна", "Земя", "Слънце", "Ракета", "Летяща чиния", "Космонавт", "Комета", "Галактика", "Телескоп", "Марс", "Астероид"];
 const symbolsText = ["🪐", "🌙", "🌍", "☀️", "🚀", "🛸", "👨‍🚀", "☄️", "🌌", "🔭", "🔴", "💎"];
+const levels = { easy: 6, medium: 8, hard: 12 };
+const translations = {
+  "en": {
+    "title": "Orbita — memory game",
+    "brand": "Orbita",
+    "home": "Orbita — home",
+    "game": "Memory game",
+    "heading": "A little focus. A universe to discover.",
+    "intro": "Flip the cards and find every matching pair.",
+    "difficulty": "Difficulty",
+    "easy": "Easy · 6 pairs",
+    "medium": "Medium · 8 pairs",
+    "hard": "Hard · 12 pairs",
+    "restart": "New game",
+    "moves": "Moves",
+    "time": "Time",
+    "pairs": "Pairs",
+    "best": "Personal best",
+    "progress": "Matched pairs",
+    "board": "Cards",
+    "ready": "Two cards. One pair. Your next move.",
+    "one": "Choose one more card.",
+    "match": "A match! Keep going.",
+    "different": "Different cards. Remember their places.",
+    "tryAgain": "Try another pair.",
+    "done": "Done! You found every pair.",
+    "hint": "The timer starts with your first card.",
+    "storage": "Saving is unavailable. You can still play without a saved record.",
+    "languageStorage": "Your language choice could not be saved. It applies for this visit.",
+    "rulesTitle": "How to play",
+    "rules": "Choose two cards. Matching cards stay face up; different cards turn back over. Choosing two different cards counts as one move. Find every pair in as few moves as possible. If moves are equal, the shorter time wins. Changing difficulty starts a new game. Use Tab and Enter or Space to play with a keyboard.",
+    "footer": "Learning project created with AI assistance · HTML, CSS and JavaScript",
+    "winTitle": "You found every pair!",
+    "again": "Play again",
+    "close": "View cards",
+    "language": "Language",
+    "newRecord": "New personal best for this difficulty!",
+    "sessionRecord": "New best for this session. Saving is unavailable.",
+    "another": "Another round to improve your score?",
+    "hidden": "hidden",
+    "card": "Card",
+    "matched": "matched pair",
+    "movesWord": "moves",
+    "resultEnd": "Great focus!",
+    "names": [
+      "Saturn",
+      "Moon",
+      "Earth",
+      "Sun",
+      "Rocket",
+      "Flying saucer",
+      "Astronaut",
+      "Comet",
+      "Galaxy",
+      "Telescope",
+      "Mars",
+      "Asteroid"
+    ]
+  },
+  "bg": {
+    "title": "Орбита — игра за памет",
+    "brand": "Орбита",
+    "home": "Орбита — начало",
+    "game": "Игра за памет",
+    "heading": "Малко фокус. Много открития.",
+    "intro": "Обърни картите и открий всички еднакви двойки.",
+    "difficulty": "Трудност",
+    "easy": "Лесно · 6 двойки",
+    "medium": "Средно · 8 двойки",
+    "hard": "Трудно · 12 двойки",
+    "restart": "Нова игра",
+    "moves": "Ходове",
+    "time": "Време",
+    "pairs": "Двойки",
+    "best": "Личен рекорд",
+    "progress": "Открити двойки",
+    "board": "Карти",
+    "ready": "Две карти. Една двойка. Твоят следващ ход.",
+    "one": "Избери още една карта.",
+    "match": "Откри двойка! Продължавай.",
+    "different": "Различни са. Запомни местата им.",
+    "tryAgain": "Опитай друга двойка.",
+    "done": "Готово! Откри всички двойки.",
+    "hint": "Таймерът започва с първата карта.",
+    "storage": "Запазването е недостъпно. Можеш да играеш без рекорд.",
+    "languageStorage": "Избраният език не може да се запази. Той важи за това посещение.",
+    "rulesTitle": "Как се играе?",
+    "rules": "Избери две карти. Еднаквите остават открити, а различните се скриват. Един ход е отварянето на две различни карти. Открий всички двойки с възможно най-малко ходове. При равни ходове печели по-краткото време. Трудността започва нова игра. С клавиатура използвай Tab и Enter или интервал.",
+    "footer": "Учебен проект, създаден с помощта на AI · HTML, CSS и JavaScript",
+    "winTitle": "Всички двойки са открити!",
+    "again": "Играй отново",
+    "close": "Виж картите",
+    "language": "Език",
+    "newRecord": "Нов личен рекорд за тази трудност!",
+    "sessionRecord": "Нов рекорд за тази сесия. Запазването е недостъпно.",
+    "another": "Още една игра за по-добър резултат?",
+    "hidden": "скрита",
+    "card": "Карта",
+    "matched": "открита двойка",
+    "movesWord": "хода",
+    "resultEnd": "Отличен фокус!",
+    "names": [
+      "Сатурн",
+      "Луна",
+      "Земя",
+      "Слънце",
+      "Ракета",
+      "Летяща чиния",
+      "Космонавт",
+      "Комета",
+      "Галактика",
+      "Телескоп",
+      "Марс",
+      "Астероид"
+    ]
+  }
+};
+const languageKey = "orbita-language-v1";
+let language = readLanguage();
+let statusKey = "ready";
+let winResult = null;
+const t = key => translations[language][key];
 const board = document.querySelector("#board");
 const difficulty = document.querySelector("#difficulty");
 const movesDisplay = document.querySelector("#moves");
@@ -62,7 +182,7 @@ function updateStats() {
   pairsDisplay.textContent = `${matchedPairs} / ${levels[difficulty.value]}`;
   progress.value = matchedPairs;
   const best = records[difficulty.value];
-  bestDisplay.textContent = best ? `${best.moves} хода · ${formatTime(best.seconds)}` : "—";
+  bestDisplay.textContent = best ? `${best.moves} ${t("movesWord")} · ${formatTime(best.seconds)}` : "—";
 }
 
 function newGame() {
@@ -71,12 +191,13 @@ function newGame() {
   clearTimeout(hideTimeout);
   if (winDialog.open) winDialog.close();
   firstCard = null;
+  winResult = null;
   locked = false;
   moves = 0;
   matchedPairs = 0;
   startedAt = null;
   timeDisplay.textContent = "00:00";
-  statusDisplay.textContent = "Две карти. Една двойка. Твоят следващ ход.";
+  setStatus("ready");
   const pairCount = levels[difficulty.value];
   progress.max = pairCount;
   board.dataset.level = difficulty.value;
@@ -90,7 +211,7 @@ function newGame() {
     card.type = "button";
     card.dataset.symbol = symbol;
     card.dataset.position = index + 1;
-    card.setAttribute("aria-label", `Карта ${index + 1}, скрита`);
+    updateCardLabel(card);
     card.innerHTML = '<span class="back" aria-hidden="true">✦</span><span class="art" aria-hidden="true"></span>';
     card.querySelector(".art").textContent = symbolsText[symbol];
     card.style.setProperty("--x", `${(symbol % 4) * 100 / 3}%`);
@@ -108,10 +229,10 @@ function flipCard(card) {
     timer = setInterval(() => { timeDisplay.textContent = formatTime(elapsedSeconds()); }, 250);
   }
   card.classList.add("open");
-  card.setAttribute("aria-label", `Карта ${card.dataset.position}, ${names[card.dataset.symbol]}`);
+  updateCardLabel(card);
   if (firstCard === null) {
     firstCard = card;
-    statusDisplay.textContent = "Избери още една карта.";
+    setStatus("one");
     return;
   }
   moves++;
@@ -121,23 +242,23 @@ function flipCard(card) {
     for (const match of [previous, card]) {
       match.classList.add("matched");
       match.disabled = true;
-      match.setAttribute("aria-label", `${names[match.dataset.symbol]}, открита двойка`);
+      updateCardLabel(match);
     }
     matchedPairs++;
-    statusDisplay.textContent = "Откри двойка! Продължавай.";
+    setStatus("match");
     updateStats();
     if (matchedPairs === levels[difficulty.value]) finishGame();
   } else {
     locked = true;
-    statusDisplay.textContent = "Различни са. Запомни местата им.";
+    setStatus("different");
     updateStats();
     hideTimeout = setTimeout(() => {
       for (const hidden of [previous, card]) {
         hidden.classList.remove("open");
-        hidden.setAttribute("aria-label", `Карта ${hidden.dataset.position}, скрита`);
+        updateCardLabel(hidden);
       }
       locked = false;
-      statusDisplay.textContent = "Опитай друга двойка.";
+      setStatus("tryAgain");
     }, 900);
   }
 }
@@ -156,11 +277,57 @@ function finishGame() {
     catch { saved = false; document.querySelector("#storage-note").hidden = false; }
   }
   updateStats();
-  statusDisplay.textContent = "Готово! Откри всички двойки.";
-  document.querySelector("#win-result").textContent = `${moves} хода за ${formatTime(seconds)}. Отличен фокус!`;
-  document.querySelector("#win-record").textContent = improved ? (saved ? "Нов личен рекорд за тази трудност!" : "Нов рекорд за тази сесия. Запазването е недостъпно.") : "Още една игра за по-добър резултат?";
+  setStatus("done");
+  winResult = { seconds, improved, saved };
+  renderWin();
   winDialog.showModal();
 }
+
+
+// Language changes only update labels; the deck, timer and records stay intact.
+function readLanguage() {
+  try { return localStorage.getItem("orbita-language-v1") === "bg" ? "bg" : "en"; }
+  catch { return "en"; }
+}
+
+function setStatus(key) {
+  statusKey = key;
+  statusDisplay.textContent = t(key);
+}
+
+function updateCardLabel(card) {
+  const name = t("names")[card.dataset.symbol];
+  const description = card.classList.contains("matched") ? `${name}, ${t("matched")}` : `${t("card")} ${card.dataset.position}, ${card.classList.contains("open") ? name : t("hidden")}`;
+  card.setAttribute("aria-label", description);
+}
+
+function renderWin() {
+  if (!winResult) return;
+  const { seconds, improved, saved } = winResult;
+  document.querySelector("#win-result").textContent = language === "en" ? `${moves} moves in ${formatTime(seconds)}. ${t("resultEnd")}` : `${moves} хода за ${formatTime(seconds)}. ${t("resultEnd")}`;
+  document.querySelector("#win-record").textContent = t(improved ? (saved ? "newRecord" : "sessionRecord") : "another");
+}
+
+function renderLanguage() {
+  document.documentElement.lang = language;
+  document.title = t("title");
+  document.querySelectorAll("[data-i18n]").forEach(element => { element.textContent = t(element.dataset.i18n); });
+  document.querySelectorAll("[data-i18n-aria]").forEach(element => { element.setAttribute("aria-label", t(element.dataset.i18nAria)); });
+  document.querySelectorAll(".language-choice").forEach(select => { select.value = language; });
+  board.querySelectorAll(".card").forEach(updateCardLabel);
+  setStatus(statusKey);
+  updateStats();
+  renderWin();
+}
+
+document.querySelectorAll(".language-choice").forEach(select => {
+  select.addEventListener("change", () => {
+    language = select.value;
+    try { localStorage.setItem(languageKey, language); }
+    catch { document.querySelector("#language-note").hidden = false; }
+    renderLanguage();
+  });
+});
 
 document.querySelector("#restart").addEventListener("click", newGame);
 difficulty.addEventListener("change", newGame);
@@ -168,3 +335,4 @@ document.querySelector("#play-again").addEventListener("click", newGame);
 document.querySelector("#close-win").addEventListener("click", () => { winDialog.close(); document.querySelector("#restart").focus(); });
 winDialog.addEventListener("cancel", () => { document.querySelector("#restart").focus(); });
 newGame();
+renderLanguage();
