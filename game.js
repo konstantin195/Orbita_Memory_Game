@@ -9,8 +9,8 @@ const translations = {
     "brand": "Orbita",
     "home": "Orbita — home",
     "game": "Memory game",
-    "heading": "A little focus. A universe to discover.",
-    "intro": "Flip the cards and find every matching pair.",
+    "heading": "Find your focus.",
+    "intro": "Flip two cards. Discover a match.",
     "difficulty": "Difficulty",
     "easy": "Easy · 6 pairs",
     "medium": "Medium · 8 pairs",
@@ -38,6 +38,10 @@ const translations = {
     "again": "Play again",
     "close": "View cards",
     "language": "Language",
+    "easyShort": "Easy", "mediumShort": "Medium", "hardShort": "Hard",
+    "switchDark": "Switch to dark mode", "switchLight": "Switch to light mode",
+    "dark": "Dark", "light": "Light",
+    "themeStorage": "Your appearance choice could not be saved. It applies for this visit.",
     "newRecord": "New personal best for this difficulty!",
     "sessionRecord": "New best for this session. Saving is unavailable.",
     "another": "Another round to improve your score?",
@@ -66,8 +70,8 @@ const translations = {
     "brand": "Орбита",
     "home": "Орбита — начало",
     "game": "Игра за памет",
-    "heading": "Малко фокус. Много открития.",
-    "intro": "Обърни картите и открий всички еднакви двойки.",
+    "heading": "Открий своя фокус.",
+    "intro": "Обърни две карти. Открий двойка.",
     "difficulty": "Трудност",
     "easy": "Лесно · 6 двойки",
     "medium": "Средно · 8 двойки",
@@ -95,6 +99,10 @@ const translations = {
     "again": "Играй отново",
     "close": "Виж картите",
     "language": "Език",
+    "easyShort": "Лесно", "mediumShort": "Средно", "hardShort": "Трудно",
+    "switchDark": "Включи тъмен режим", "switchLight": "Включи светъл режим",
+    "dark": "Тъмно", "light": "Светло",
+    "themeStorage": "Избраният режим не може да се запази. Той важи за това посещение.",
     "newRecord": "Нов личен рекорд за тази трудност!",
     "sessionRecord": "Нов рекорд за тази сесия. Запазването е недостъпно.",
     "another": "Още една игра за по-добър резултат?",
@@ -121,6 +129,7 @@ const translations = {
 };
 const languageKey = "orbita-language-v1";
 let language = readLanguage();
+let theme = readTheme();
 let statusKey = "ready";
 let winResult = null;
 const t = key => translations[language][key];
@@ -181,7 +190,12 @@ function updateStats() {
   movesDisplay.textContent = String(moves).padStart(2, "0");
   pairsDisplay.textContent = `${matchedPairs} / ${levels[difficulty.value]}`;
   progress.value = matchedPairs;
+  document.querySelector("#progress-percent").textContent = `${Math.round(matchedPairs / levels[difficulty.value] * 100)}%`;
+  document.querySelectorAll("button[data-level]").forEach(button => {
+    button.setAttribute("aria-pressed", String(button.dataset.level === difficulty.value));
+  });
   const best = records[difficulty.value];
+  bestDisplay.classList.toggle("empty", !best);
   bestDisplay.textContent = best ? `${best.moves} ${t("movesWord")} · ${formatTime(best.seconds)}` : "—";
 }
 
@@ -212,7 +226,7 @@ function newGame() {
     card.dataset.symbol = symbol;
     card.dataset.position = index + 1;
     updateCardLabel(card);
-    card.innerHTML = '<span class="back" aria-hidden="true">✦</span><span class="art" aria-hidden="true"></span>';
+    card.innerHTML = '<span class="back" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><circle cx="24" cy="24" r="14"/><ellipse cx="24" cy="24" rx="23" ry="8" transform="rotate(-30 24 24)"/><circle class="orbit-dot" cx="39" cy="11" r="3"/></svg></span><span class="art" aria-hidden="true"></span>';
     card.querySelector(".art").textContent = symbolsText[symbol];
     card.style.setProperty("--x", `${(symbol % 4) * 100 / 3}%`);
     card.style.setProperty("--y", `${Math.floor(symbol / 4) * 50}%`);
@@ -313,19 +327,53 @@ function renderLanguage() {
   document.title = t("title");
   document.querySelectorAll("[data-i18n]").forEach(element => { element.textContent = t(element.dataset.i18n); });
   document.querySelectorAll("[data-i18n-aria]").forEach(element => { element.setAttribute("aria-label", t(element.dataset.i18nAria)); });
-  document.querySelectorAll(".language-choice").forEach(select => { select.value = language; });
+  document.querySelectorAll("[data-language]").forEach(button => { button.setAttribute("aria-pressed", String(button.dataset.language === language)); });
+  renderTheme();
   board.querySelectorAll(".card").forEach(updateCardLabel);
   setStatus(statusKey);
   updateStats();
   renderWin();
 }
 
-document.querySelectorAll(".language-choice").forEach(select => {
-  select.addEventListener("change", () => {
-    language = select.value;
+document.querySelectorAll("[data-language]").forEach(button => {
+  button.addEventListener("click", () => {
+    language = button.dataset.language;
     try { localStorage.setItem(languageKey, language); }
     catch { document.querySelector("#language-note").hidden = false; }
     renderLanguage();
+  });
+});
+
+// Appearance is independent of game state and language.
+function readTheme() {
+  try { return localStorage.getItem("orbita-theme-v1") === "dark" ? "dark" : "light"; }
+  catch { return "light"; }
+}
+
+function renderTheme() {
+  document.documentElement.dataset.theme = theme;
+  document.querySelector('meta[name="theme-color"]').content = theme === "dark" ? "#161618" : "#f5f5f7";
+  document.querySelectorAll(".theme-toggle").forEach(button => {
+    button.setAttribute("aria-label", t(theme === "light" ? "switchDark" : "switchLight"));
+    button.title = button.getAttribute("aria-label");
+    button.querySelector(".theme-label").textContent = t(theme === "light" ? "dark" : "light");
+  });
+}
+
+document.querySelectorAll(".theme-toggle").forEach(button => {
+  button.addEventListener("click", () => {
+    theme = theme === "light" ? "dark" : "light";
+    try { localStorage.setItem("orbita-theme-v1", theme); }
+    catch { document.querySelector("#theme-note").hidden = false; }
+    renderTheme();
+  });
+});
+
+document.querySelectorAll("button[data-level]").forEach(button => {
+  button.addEventListener("click", () => {
+    if (difficulty.value === button.dataset.level) return;
+    difficulty.value = button.dataset.level;
+    newGame();
   });
 });
 
