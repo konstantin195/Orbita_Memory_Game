@@ -6,15 +6,14 @@ A space-themed card matching game built with HTML, CSS and JavaScript.
 
 - Three difficulty levels: 6, 8 or 12 pairs.
 - Shuffled cards, move counter, timer and progress bar.
-- A win screen and a personal best saved for each difficulty.
-- English by default, with an English / Български language selector.
-- Saved language preference; switching languages keeps the current game intact.
+- Win screen and personal best for each difficulty.
+- EN | BG language selector; English by default.
+- Light and dark mode, with saved language and theme preferences.
+- Switching language or theme keeps the current game intact.
 - Responsive layout and keyboard controls.
 
 ## Run
 
-Open `index.html` in your browser.
-
-No account, backend or API key is needed. Scores and language preferences are saved only in the current browser. Reloading starts a new round.
+Open `index.html` in your browser. No account, backend or API key is needed. Preferences and scores stay in your browser.
 
 Prepared with AI assistance (Codex) as a learning project for a SoftUni BUDITEL student's portfolio.
