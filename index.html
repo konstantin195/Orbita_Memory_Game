@@ -1,43 +1,45 @@
 <!doctype html>
-<html lang="bg">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#101c32">
-  <title>Орбита — игра за памет</title>
+  <title>Orbita — memory game</title>
   <link rel="stylesheet" href="style.css">
   <script src="game.js" defer></script>
 </head>
 <body>
-  <header class="header"><a href="./index.html" aria-label="Орбита — начало">Орбита</a><span>Игра за памет</span></header>
+  <header class="header"><a href="./index.html" aria-label="Orbita — home" data-i18n="brand" data-i18n-aria="home">Orbita</a><div class="header-tools"><span data-i18n="game" >Memory game</span><label class="sr-only" for="language" data-i18n="language">Language</label><select id="language" class="language-choice" aria-label="Language" data-i18n-aria="language"><option value="en">English</option><option value="bg">Български</option></select></div></header>
   <main>
-    <h1>Малко фокус. Много открития.</h1>
-    <p class="intro">Обърни картите и открий всички еднакви двойки.</p>
-    <section class="game" aria-label="Игра за памет">
+    <h1 data-i18n="heading" >A little focus. A universe to discover.</h1>
+    <p data-i18n="intro" class="intro">Flip the cards and find every matching pair.</p>
+    <section class="game" aria-label="Memory game" data-i18n-aria="game">
       <div class="toolbar">
-        <label class="sr-only" for="difficulty">Трудност</label>
-        <select id="difficulty"><option value="easy">Лесно · 6 двойки</option><option value="medium" selected>Средно · 8 двойки</option><option value="hard">Трудно · 12 двойки</option></select>
-        <button id="restart" class="primary">Нова игра</button>
+        <label data-i18n="difficulty" class="sr-only" for="difficulty">Difficulty</label>
+        <select id="difficulty"><option data-i18n="easy" value="easy">Easy · 6 pairs</option><option data-i18n="medium" value="medium" selected>Medium · 8 pairs</option><option data-i18n="hard" value="hard">Hard · 12 pairs</option></select>
+        <button data-i18n="restart" id="restart" class="primary">New game</button>
       </div>
       <div class="stats">
-        <div><span>Ходове</span><strong id="moves">00</strong></div>
-        <div><span>Време</span><strong id="time">00:00</strong></div>
-        <div><span>Двойки</span><strong id="pairs">0 / 8</strong></div>
-        <div class="record"><span>Личен рекорд</span><strong id="best">—</strong></div>
+        <div><span data-i18n="moves" >Moves</span><strong id="moves">00</strong></div>
+        <div><span data-i18n="time" >Time</span><strong id="time">00:00</strong></div>
+        <div><span data-i18n="pairs" >Pairs</span><strong id="pairs">0 / 8</strong></div>
+        <div class="record"><span data-i18n="best" >Personal best</span><strong id="best">—</strong></div>
       </div>
-      <progress id="progress" value="0" max="8" aria-label="Открити двойки"></progress>
-      <div id="board" class="board" aria-label="Карти"></div>
-      <p id="status" class="status" role="status">Две карти. Една двойка. Твоят следващ ход.</p>
-      <p class="hint">Таймерът започва с първата карта.</p>
-      <p id="storage-note" class="hint" hidden>Запазването е недостъпно. Можеш да играеш без рекорд.</p>
+      <progress id="progress" value="0" max="8" aria-label="Matched pairs" data-i18n-aria="progress"></progress>
+      <div id="board" class="board" aria-label="Cards" data-i18n-aria="board"></div>
+      <p id="status" class="status" role="status">Two cards. One pair. Your next move.</p>
+      <p data-i18n="hint" class="hint">The timer starts with your first card.</p>
+      <p data-i18n="storage" id="storage-note" class="hint" hidden>Saving is unavailable. You can still play without a saved record.</p>
+      <p data-i18n="languageStorage" id="language-note" class="hint" hidden>Your language choice could not be saved. It applies for this visit.</p>
     </section>
-    <details><summary>Как се играе?</summary><p>Избери две карти. Еднаквите остават открити, а различните се скриват. Един ход е отварянето на две карти. Открий всички двойки с възможно най-малко ходове. При равни ходове печели по-краткото време. Трудността започва нова игра. С клавиатура използвай Tab и Enter или интервал.</p></details>
+    <details><summary data-i18n="rulesTitle" >How to play</summary><p data-i18n="rules" >Choose two cards. Matching cards stay face up; different cards turn back over. Choosing two different cards counts as one move. Find every pair in as few moves as possible. If moves are equal, the shorter time wins. Changing difficulty starts a new game. Use Tab and Enter or Space to play with a keyboard.</p></details>
   </main>
-  <footer>Учебен проект, създаден с помощта на AI · HTML, CSS и JavaScript</footer>
+  <footer data-i18n="footer" >Learning project created with AI assistance · HTML, CSS and JavaScript</footer>
   <dialog id="win" aria-labelledby="win-title">
-    <div class="win-star" aria-hidden="true">✦</div><h2 id="win-title">Всички двойки са открити!</h2>
+    <select class="language-choice" aria-label="Language" data-i18n-aria="language"><option value="en">English</option><option value="bg">Български</option></select>
+    <div class="win-star" aria-hidden="true">✦</div><h2 data-i18n="winTitle" id="win-title">You found every pair!</h2>
     <p id="win-result"></p><p id="win-record"></p>
-    <button id="play-again" class="primary">Играй отново</button><button id="close-win" class="secondary">Виж картите</button>
+    <button data-i18n="again" id="play-again" class="primary">Play again</button><button data-i18n="close" id="close-win" class="secondary">View cards</button>
   </dialog>
 </body>
 </html>
